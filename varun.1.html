@@ -1,0 +1,29 @@
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    driver_name = request.form['driver_name']
+    kms_driven = float(request.form['kms_driven'])
+    hours_driven = float(request.form['hours_driven'])
+
+    if hours_driven == 0:
+        productivity = "N/A (Hours driven cannot be zero)"
+    else:
+        productivity = round(kms_driven / hours_driven, 2)
+
+    return render_template(
+        'result.html',
+        driver_name=driver_name,
+        kms_driven=kms_driven,
+        hours_driven=hours_driven,
+        productivity=productivity
+    )
+
+if __name__ == '__main__':
+    app.run(debug=True)
